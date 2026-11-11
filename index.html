@@ -96,29 +96,19 @@
 	<script type="module">
 		import * as pdfjsLib from "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs";
 
-		const documents = {
-			"b2-fn-short": {
-				title: "b2 fn short",
-				file: "b2%20fn%20short/b2%20fn%20short.pdf"
-			},
-			"work-display1": {
-				title: "work display1",
-				file: "work%20display1/work%20display1.pdf"
-			}
-		};
 		const pagesContainer = document.querySelector("#pages");
 		const status = document.querySelector("#status");
-		const documentId = new URLSearchParams(window.location.search).get("pdf") || "b2-fn-short";
-		const selectedDocument = Object.hasOwn(documents, documentId) ? documents[documentId] : null;
+		const defaultPdf = "Zheng_Han_1463335_Brief2_fullQuality.pdf";
+		const pdfName = new URLSearchParams(window.location.search).get("pdf") || defaultPdf;
 
 		pdfjsLib.GlobalWorkerOptions.workerSrc =
 			"https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.mjs";
 
-		if (selectedDocument) {
-			document.title = `${selectedDocument.title} - PDF Displayer`;
-			loadPdf(selectedDocument.file);
+		if (/^[^/\\]+\.pdf$/i.test(pdfName)) {
+			document.title = `${pdfName} - PDF Displayer`;
+			loadPdf(`GDES30003%20Brief%202/${encodeURIComponent(pdfName)}`);
 		} else {
-			status.textContent = `未找到 PDF：${documentId}`;
+			status.textContent = "PDF 文件名无效，请在链接的 ?pdf= 后填写 .pdf 文件名。";
 		}
 
 		async function loadPdf(pdfFile) {
